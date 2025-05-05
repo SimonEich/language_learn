@@ -2,7 +2,6 @@ import random
 from tkinter import *
 from tkinter import filedialog, ttk
 import tkinter as tk
-from read_file import ReadFile  # Make sure this file/module exists and works
 
 class Gui:
     def __init__(self, data):

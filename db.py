@@ -3,9 +3,8 @@ import os
 
 
 class Database:
-    def __init__(self, data: list) -> None:
+    def __init__(self) -> None:
         self.i = 0
-        self.data = data
         self.conn()
         self.create()
         self._remove_empty_entries()
