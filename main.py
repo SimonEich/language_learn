@@ -1,8 +1,6 @@
 from db import Database
 from gui import Gui
 
-from cards import Card
-
 file_name = "cards/cards/txt/es_en.txt"
 
 
