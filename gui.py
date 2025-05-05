@@ -41,6 +41,11 @@ class Gui:
         self.remaining_label = None
 
         self._create_gui()
+        
+    def text_screen(self):
+        root = Tk()
+        root.title("Offline Translator")
+        root.geometry("1000x600")
 
     def _create_gui(self) -> None:
         """Initialize the GUI with the start screen."""
@@ -71,6 +76,9 @@ class Gui:
 
         add_button = Button(self.root, text='Add Words', width=12, font=("Arial", 14), command=self.addData_screen)
         add_button.place(relx=0.75, y=80, anchor="n")
+        
+        text_button = Button(self.root, text='Translate Text', width=12, font=("Arial", 14), command=self.text_screen)
+        text_button.place(relx=0.75, y=120, anchor="n")
 
     def game_screen(self):
         """Initialize and display the game screen."""

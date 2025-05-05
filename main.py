@@ -1,14 +1,7 @@
-from db import Database
-from gui import Gui
+from gui.gui_base import Gui
+from data.data_handler import DataHandler  # adjust to match your actual implementation
 
-file_name = "cards/cards/txt/es_en.txt"
-
-
-if __name__=="__main__":
-    
-
-    db = Database()
-    gui = Gui(db)
-    
-    gui.root.mainloop()
-    
+if __name__ == "__main__":
+    data = DataHandler()
+    app = Gui(data)
+    app.root.mainloop()
