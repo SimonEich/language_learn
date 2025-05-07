@@ -13,6 +13,7 @@ import tkinter as tk
 from .game_screen import setup_game_screen
 from .training_screen import training_screen
 from .add_screen import addData_screen
+from .text_screen import text_screen
 
 from .utils import destroy_widgets, add_back_button
 
@@ -45,7 +46,7 @@ class Gui:
         self.correct_label = None
         self.remaining_label = None
 
-        self._create_gui()
+        self.show_start_screen()
         
     def show_start_screen(self) -> None:
         """Display the start screen with navigation buttons."""
@@ -64,11 +65,7 @@ class Gui:
         add_button = Button(self.root, text='Add Words', width=12, font=("Arial", 14), command=lambda: addData_screen(self))
         add_button.place(relx=0.75, y=80, anchor="n")
         
-        text_button = Button(self.root, text='Translate Text', width=12, font=("Arial", 14), command=None)
+        text_button = Button(self.root, text='Translate Text', width=12, font=("Arial", 14), command=lambda: text_screen(self))
         text_button.place(relx=0.75, y=120, anchor="n")
         
 
-    
-    def _create_gui(self) -> None:
-        """Initialize the GUI with the start screen."""
-        self.show_start_screen()
