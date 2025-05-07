@@ -1,16 +1,14 @@
 from .utils import destroy_widgets, add_back_button
 from tkinter import *
-
+from transformers import MarianMTModel, MarianTokenizer
 import re
-
-#from transformers import MarianMTModel, MarianTokenizer
 
 # Load MarianMT model
 src_lang = "es"
 tgt_lang = "en"
 model_name = f"Helsinki-NLP/opus-mt-{src_lang}-{tgt_lang}"
-#tokenizer = MarianTokenizer.from_pretrained(model_name)
-#model = MarianMTModel.from_pretrained(model_name)
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
 
 def text_screen(self):
     # GUI
@@ -36,39 +34,41 @@ def text_screen(self):
     root.mainloop()
 
 def text_translate_screen(root):
-    text = root.text_field.get("1.0", END).strip()  # Get all the text from the Text widget
-    sentences = re.split(r'(?<=[.!?]) +', text.strip())  # Split text into sentences
+    text = root.text_field.get("1.0", END).strip()
+    sentences = re.split(r'(?<=[.!?]) +', text.strip())
 
-    # Clear any existing widgets (if needed)
+    # Clear all widgets on screen
     for widget in root.winfo_children():
         widget.destroy()
 
-    # Show the label
-    Label(root, text="Click a sentence to print it:", font=("Arial", 14)).pack(pady=10)
+    Label(root, text="Click a sentence to translate it:", font=("Arial", 14)).pack(pady=10)
 
-    # Create a Text widget to display the sentences
-    text_widget = Text(root, wrap=WORD, font=("Arial", 20))
-    text_widget.pack(expand=True, fill=BOTH, padx=10, pady=10)
+    text_widget = Text(root, wrap=WORD, font=("Arial", 20), height=10)
+    text_widget.pack(padx=10, pady=10, fill=X)
+    
+    
+    # Create a label for translation output with line wrapping
+    label = Label(root, text="", font=('Arial', 20), wraplength=700, justify=LEFT)
+    label.pack(pady=20, padx=20)
 
-    # Insert and tag each sentence
+
+
+    # Pass label as an argument when binding sentences
     for i, sentence in enumerate(sentences):
         tag = f"sentence_{i}"
         text_widget.insert(END, sentence + " ", tag)
 
-        # Bind each sentence to a click event that prints it
-        def bind_sentence(s):
-            return lambda e: print(s)
+        # Fix late binding issue by defining the function inside the loop
+        def make_callback(s):
+            return lambda e: translate_text(s, label)
 
-        text_widget.tag_bind(tag, "<Button-1>", bind_sentence(sentence))
+        text_widget.tag_bind(tag, "<Button-1>", make_callback(sentence))
 
-    # Add a back button to return to the previous screen
-    back_button = Button(root, text="Back", font=("Arial", 14), command=lambda: go_back(root))
-    back_button.pack(pady=10)
+def translate_text(s, label):
+    inputs = tokenizer(s, return_tensors="pt", padding=True)
+    translated = model.generate(**inputs)
+    output = tokenizer.decode(translated[0], skip_special_tokens=True)
 
+    # Update the label with the translated text
+    label.config(text=output)
 
-def go_back(root):
-    # Close the current window (destroy the root window)
-    root.destroy()
-
-    # Recreate the initial window (text screen)
-    text_screen(None)
